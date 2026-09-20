@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{page_title} - GitCode</title>
+  <link rel="stylesheet" href="/static/css/gitcode.css">
+  <script src="/static/js/theme.js"></script>
+</head>
+<body>
+
+<header class="gc-header">
+  <div class="gc-header-inner">
+    <a class="gc-logo" href="/">GitCode</a>
+    <nav class="gc-nav">
+      <a href="/explore">Explore</a>
+    </nav>
+    <div class="gc-header-actions">
+      <button type="button" id="gc-theme-toggle" class="gc-theme-toggle" aria-label="Toggle theme">theme</button>
+      {auth_area}
+    </div>
+  </div>
+</header>
+
+<main class="gc-container">
+  {flash}
+  {content}
+</main>
+
+</body>
+</html>

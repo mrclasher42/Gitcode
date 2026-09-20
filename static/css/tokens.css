@@ -1,0 +1,131 @@
+/*
+ * GitCode design tokens
+ * Color values follow the public Primer design system (MIT-licensed spec).
+ */
+
+:root {
+  /* Light theme (default) */
+  --gc-bg: #ffffff;
+  --gc-bg-secondary: #f6f8fa;
+  --gc-bg-tertiary: #eaeef2;
+  --gc-bg-canvas: #ffffff;
+  --gc-bg-inset: #f6f8fa;
+  --gc-bg-overlay: #ffffff;
+
+  --gc-border: #d0d7de;
+  --gc-border-muted: #d8dee4;
+
+  --gc-fg: #1f2328;
+  --gc-fg-muted: #656d76;
+  --gc-fg-subtle: #6e7781;
+  --gc-fg-on-emphasis: #ffffff;
+
+  --gc-link: #0969da;
+
+  --gc-accent: #0969da;
+  --gc-accent-emphasis: #0969da;
+  --gc-accent-muted: rgba(84, 174, 255, 0.4);
+  --gc-accent-subtle: #ddf4ff;
+
+  --gc-success: #1f883d;
+  --gc-success-emphasis: #1f883d;
+  --gc-success-subtle: #dafbe1;
+
+  --gc-attention: #9a6700;
+  --gc-attention-subtle: #fff8c5;
+
+  --gc-danger: #cf222e;
+  --gc-danger-emphasis: #cf222e;
+  --gc-danger-subtle: #ffebe9;
+
+  --gc-done: #8250df;
+  --gc-done-subtle: #fbefff;
+
+  --gc-btn-default-bg: #f6f8fa;
+  --gc-btn-default-hover-bg: #f3f4f6;
+  --gc-btn-default-active-bg: #ebecf0;
+  --gc-btn-default-border: rgba(31, 35, 40, 0.15);
+  --gc-btn-default-fg: #24292f;
+
+  --gc-btn-primary-bg: #1f883d;
+  --gc-btn-primary-hover-bg: #1a7f37;
+  --gc-btn-primary-active-bg: #187733;
+  --gc-btn-primary-fg: #ffffff;
+
+  --gc-btn-danger-bg: #cf222e;
+  --gc-btn-danger-hover-bg: #a40e26;
+  --gc-btn-danger-fg: #ffffff;
+
+  --gc-shadow-small: 0 1px 0 rgba(31, 35, 40, 0.04);
+  --gc-shadow-medium: 0 3px 6px rgba(140, 149, 159, 0.15);
+  --gc-shadow-large: 0 8px 24px rgba(140, 149, 159, 0.2);
+
+  --gc-radius: 6px;
+  --gc-radius-sm: 4px;
+
+  --gc-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+             Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --gc-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+                  "Liberation Mono", monospace;
+
+  --gc-header-height: 62px;
+  --gc-content-max: 1280px;
+  --gc-content-padding: 32px;
+  --gc-content-padding-sm: 16px;
+}
+
+[data-theme="dark"] {
+  --gc-bg: #0d1117;
+  --gc-bg-secondary: #161b22;
+  --gc-bg-tertiary: #21262d;
+  --gc-bg-canvas: #0d1117;
+  --gc-bg-inset: #010409;
+  --gc-bg-overlay: #161b22;
+
+  --gc-border: #30363d;
+  --gc-border-muted: #21262d;
+
+  --gc-fg: #e6edf3;
+  --gc-fg-muted: #848d97;
+  --gc-fg-subtle: #6e7681;
+  --gc-fg-on-emphasis: #ffffff;
+
+  --gc-link: #2f81f7;
+
+  --gc-accent: #2f81f7;
+  --gc-accent-emphasis: #1f6feb;
+  --gc-accent-subtle: #121d2f;
+
+  --gc-success: #238636;
+  --gc-success-emphasis: #238636;
+  --gc-success-subtle: #12261e;
+
+  --gc-attention: #d29922;
+  --gc-attention-subtle: #272115;
+
+  --gc-danger: #da3633;
+  --gc-danger-emphasis: #da3633;
+  --gc-danger-subtle: #25171c;
+
+  --gc-done: #a371f7;
+  --gc-done-subtle: #1e1733;
+
+  --gc-btn-default-bg: #21262d;
+  --gc-btn-default-hover-bg: #30363d;
+  --gc-btn-default-active-bg: #282e33;
+  --gc-btn-default-border: #363b42;
+  --gc-btn-default-fg: #c9d1d9;
+
+  --gc-btn-primary-bg: #238636;
+  --gc-btn-primary-hover-bg: #2ea043;
+  --gc-btn-primary-active-bg: #29903b;
+  --gc-btn-primary-fg: #ffffff;
+
+  --gc-btn-danger-bg: #da3633;
+  --gc-btn-danger-hover-bg: #f85149;
+  --gc-btn-danger-fg: #ffffff;
+
+  --gc-shadow-small: 0 0 transparent;
+  --gc-shadow-medium: 0 3px 6px #010409;
+  --gc-shadow-large: 0 8px 24px #010409;
+}
