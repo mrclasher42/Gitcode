@@ -1,20 +1,26 @@
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
 # Python
 __pycache__/
-*.py[cod]
-*.egg-info/
+*.pyc
+*.pyo
 .venv/
 venv/
 
-# Local data
+# GitCode runtime
 data/*.db
 data/*.db-journal
 data/*.db-wal
 data/*.db-shm
 data/sessions/
-
-# User repos
 repos/*
-!repos/.gitkeep
+
+# User CLI config
+.gitcode/
 
 # Editor
 .vscode/
@@ -27,3 +33,4 @@ Thumbs.db
 
 # Logs
 *.log
+*.bundle
