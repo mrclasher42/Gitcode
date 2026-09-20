@@ -1,0 +1,96 @@
+# GitCode
+
+A lightweight self-hosted Git platform, built from scratch in Python and React.
+
+**Status:** Beta. Not ready for production.
+
+## What is GitCode
+
+GitCode is a self-hosted alternative to GitHub, designed to run on Termux/Android
+without root. It stores real git repositories on disk and serves them through a
+small HTTP API and a React web interface.
+
+## Features
+
+| Feature | Status |
+|---------|--------|
+| User signup / login | Done |
+| Create / delete repositories | Done |
+| Browse repo tree, files, commits | Done |
+| Branches | Done |
+| README.gc rendering | Done |
+| LICENSE tab | Done |
+| Fork repositories | Done |
+| Clone menu (HTTPS / SSH / CLI) | Done |
+| Issues | Planned |
+| Pull requests | Planned |
+| Stars / watch | Planned |
+| Web editor | Planned |
+| Search | Planned |
+
+## Architecture
+
+    Browser (React + Tailwind)
+            |
+            v
+    Python HTTP API (backend/server.py)
+            |
+            +--> auth.py       (sessions, pbkdf2)
+            +--> db.py         (SQLite)
+            +--> git_ops.py    (git CLI wrapper)
+            |
+            v
+    data/gitcode.db   +   repos/<user>/<repo>.git/
+
+## Requirements
+
+- Python 3.10+
+- Node.js 18+
+- git CLI
+
+## Setup
+
+### Backend
+
+    cd backend
+    python server.py
+    # http://localhost:8080
+
+### Frontend
+
+    cd frontend
+    npm install
+    npm run dev -- --host 0.0.0.0 --port 5173
+    # http://localhost:5173
+
+### CLI
+
+    ln -sf ~/gitcode/cli/gc ~/bin/gc
+    gc login
+    gc create my-project
+    gc push
+    gc clone user/repo
+    gc fork user/repo
+
+## CLI reference
+
+| Command | Description |
+|---------|-------------|
+| `gc login` | Log in to a server |
+| `gc logout` | Clear local session |
+| `gc whoami` | Print current user |
+| `gc create <name>` | Create a repository |
+| `gc list` | List your repositories |
+| `gc push` | Push current directory to server |
+| `gc clone <user>/<repo>` | Clone a repository |
+| `gc fork <user>/<repo>` | Fork a repository |
+| `gc config` | Show or set config |
+
+## Custom README
+
+GitCode looks for `README.gc` first, falling back to `README.md`.
+The same applies to `LICENSE`, `LICENSE.md`, `LICENSE.gc`.
+
+## License
+
+MIT. See LICENSE.
