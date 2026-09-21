@@ -4,8 +4,11 @@ import hmac
 import hashlib
 import secrets
 
+import config
+
 ITERATIONS = 200_000
-SESSION_TTL = 60 * 60 * 24 * 30  # 30 days
+_session_days = config.session_ttl_days()
+SESSION_TTL = 60 * 60 * 24 * _session_days
 
 
 def hash_password(password, salt=None):

@@ -1,0 +1,39 @@
+# GitCode configuration
+# Simple key = value format
+# Lines starting with # are comments
+
+# Repository features
+allow_forks = true
+allow_delete = true
+allow_private = true
+allow_web_editor = true
+allow_signup = false
+
+# Limits
+max_repos_per_user = 50
+max_file_size_kb = 5120
+max_description_length = 500
+max_issues_per_repo = 1000
+
+# Defaults
+default_branch = main
+default_readme = README.gc
+
+# UI
+site_name = GitCode
+site_description = Self-hosted Git platform
+items_per_page = 30
+show_watch_button = true
+show_star_button = true
+show_fork_button = true
+
+# Security
+session_ttl_days = 30
+min_password_length = 6
+max_username_length = 39
+
+# Features (future)
+enable_issues = true
+enable_pull_requests = false
+enable_wiki = false
+enable_lfs = false

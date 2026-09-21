@@ -35,10 +35,12 @@ export const api = {
 
   // repos
   listRepos:   () => req("GET",    "/repos"),
+  listMyRepos: () => req("GET",    "/repos/mine"),
   getRepo:     (u, r) => req("GET", "/repos/" + u + "/" + r),
   createRepo:  (name, description, priv) =>
                  req("POST", "/repos", { name, description, private: priv }),
   deleteRepo:  (u, r) => req("DELETE", "/repos/" + u + "/" + r),
+  updateRepo:  (u, r, data) => req("PATCH", "/repos/" + u + "/" + r, data),
 
   // repo content
   getTree:     (u, r, branch, path) =>
@@ -48,6 +50,14 @@ export const api = {
   getCommits:  (u, r, branch) =>
                  req("GET", `/repos/${u}/${r}/commits?branch=${encodeURIComponent(branch)}`),
   forkRepo:    (u, r) => req("POST", `/repos/${u}/${r}/fork`),
+  getSocial:   (u, r) => req("GET",  `/repos/${u}/${r}/social`),
+  toggleStar:  (u, r) => req("POST", `/repos/${u}/${r}/star`),
+  toggleWatch: (u, r) => req("POST", `/repos/${u}/${r}/watch`),
+  followUser:   (u) => req("POST", `/users/${u}/follow`),
+  unfollowUser: (u) => req("DELETE", `/users/${u}/follow`),
+  updateProfile: (data) => req("POST", "/users/me/profile", data),
+  listNotifications: () => req("GET", "/notifications"),
+  markRead: () => req("POST", "/notifications/read"),
   getBranches: (u, r) =>
                  req("GET", `/repos/${u}/${r}/branches`),
 };

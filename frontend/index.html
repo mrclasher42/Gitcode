@@ -1,16 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" data-color-mode="light">
+<html lang="en" dir="ltr" data-color-mode="dark" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitCode</title>
     <script>
       (function () {
-        var s = localStorage.getItem("gc-theme");
-        if (s !== "light" && s !== "dark") {
-          s = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        }
-        document.documentElement.setAttribute("data-color-mode", s);
+        try {
+          var lang = localStorage.getItem("gc-lang") || "en";
+          document.documentElement.setAttribute("lang", lang);
+          document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+
+          var t = localStorage.getItem("gc-theme") || "system";
+          if (t === "light" || t === "dark") {
+            document.documentElement.setAttribute("data-color-mode", t);
+            document.documentElement.setAttribute("data-theme", t);
+          } else {
+            var sys = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            document.documentElement.setAttribute("data-color-mode", sys);
+            document.documentElement.setAttribute("data-theme", sys);
+          }
+        } catch (e) {}
       })();
     </script>
   </head>

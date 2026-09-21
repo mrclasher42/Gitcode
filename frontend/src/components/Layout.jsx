@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
+import { MainTabs } from "./MainTabs";
 import { useAuth } from "../contexts/AuthContext";
 
 export function Layout() {
@@ -14,6 +15,7 @@ export function Layout() {
   return (
     <div className="min-h-screen">
       <Header user={user} />
+      <MainTabs />
       <main className="mx-auto max-w-[1280px] px-4 py-6 md:px-8">
         <Outlet />
       </main>

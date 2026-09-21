@@ -8,6 +8,7 @@ import getpass
 import subprocess
 import tempfile
 import urllib.request
+import ssl
 import urllib.error
 from urllib.parse import urlparse
 
@@ -39,7 +40,12 @@ def require_config():
 
 def api_request(cfg, method, path, data=None, raw_body=None, raw_ctype=None):
     url = cfg["server"].rstrip("/") + path
-    headers = {"Cookie": "gc_session=" + cfg["token"]}
+    tok = cfg["token"]
+    headers = {}
+    if tok.startswith("gc_"):
+        headers["Authorization"] = "Bearer " + tok
+    else:
+        headers["Cookie"] = "gc_session=" + tok
     body = None
 
     if data is not None:
@@ -53,7 +59,7 @@ def api_request(cfg, method, path, data=None, raw_body=None, raw_ctype=None):
     req = urllib.request.Request(url, data=body, method=method, headers=headers)
 
     try:
-        with urllib.request.urlopen(req) as resp:
+        with urllib.request.urlopen(req, context=ssl._create_unverified_context()) as resp:
             raw = resp.read()
             ctype = resp.headers.get("Content-Type", "")
             if "application/json" in ctype:
@@ -75,7 +81,16 @@ def cmd_login(args):
     server = args.server or input("Server URL [http://localhost:8080]: ").strip() \
              or "http://localhost:8080"
     username = args.username or input("Username: ").strip()
-    password = args.password or getpass.getpass("Password: ")
+    if args.password:
+        password = args.password
+    else:
+        try:
+            password = getpass.getpass("Password: ").strip()
+        except Exception:
+            import sys as _sys
+            _sys.stderr.write("Password: ")
+            _sys.stderr.flush()
+            password = _sys.stdin.readline().rstrip("\n").strip()
 
     payload = json.dumps({"username": username, "password": password}).encode()
     req = urllib.request.Request(
@@ -85,7 +100,7 @@ def cmd_login(args):
         headers={"Content-Type": "application/json"},
     )
     try:
-        with urllib.request.urlopen(req) as resp:
+        with urllib.request.urlopen(req, context=ssl._create_unverified_context()) as resp:
             set_cookie = resp.headers.get("Set-Cookie", "")
             token = ""
             for part in set_cookie.split(";"):
@@ -216,15 +231,52 @@ def cmd_fork(args):
     print("  gc clone %s/%s" % (r["owner_username"], r["name"]))
 
 
+def cmd_token(args):
+    cfg = require_config()
+    if args.action == "new":
+        name = args.value or "cli"
+        data, _ = api_request(cfg, "POST", "/api/tokens", {"name": name})
+        print("Token created:")
+        print("  " + data["token"])
+        print("")
+        print("Use in your config:")
+        print("  gc config set token " + data["token"])
+    elif args.action == "list":
+        data, _ = api_request(cfg, "GET", "/api/tokens")
+        for t in data["tokens"]:
+            print("  [%d] %s (%s)" % (t["id"], t["name"], t["scopes"]))
+    elif args.action == "delete":
+        api_request(cfg, "DELETE", "/api/tokens/" + str(args.value))
+        print("Deleted.")
+
+
 def cmd_clone(args):
     cfg = require_config()
-    owner, repo = args.repo.split("/", 1)
+    repo_arg = args.repo
+
+    # Support full URL
+    if repo_arg.startswith("http://") or repo_arg.startswith("https://"):
+        from urllib.parse import urlparse as _urlparse
+        parsed = _urlparse(repo_arg)
+        cfg["server"] = "%s://%s" % (parsed.scheme, parsed.netloc)
+        path = parsed.path.strip("/")
+        if path.endswith(".git"):
+            path = path[:-4]
+        parts = path.split("/")
+        if len(parts) >= 2:
+            owner, repo = parts[-2], parts[-1]
+        else:
+            print("error: cannot parse owner/repo", file=sys.stderr)
+            sys.exit(1)
+    else:
+        owner, repo = repo_arg.split("/", 1)
+
     url = "%s/api/repos/%s/%s/bundle" % (cfg["server"], owner, repo)
     req = urllib.request.Request(
         url, headers={"Cookie": "gc_session=" + cfg["token"]},
     )
     try:
-        with urllib.request.urlopen(req) as resp:
+        with urllib.request.urlopen(req, context=ssl._create_unverified_context()) as resp:
             data = resp.read()
     except urllib.error.HTTPError as e:
         print("error: %d" % e.code, file=sys.stderr)
@@ -234,9 +286,13 @@ def cmd_clone(args):
     tmp.write(data)
     tmp.close()
     try:
+        subprocess.run(["git", "clone", tmp.name, repo], check=True)
+        # FIX: set origin to the real server URL
+        repo_dir = os.path.join(os.getcwd(), repo)
+        real_origin = "%s/%s/%s" % (cfg["server"], owner, repo)
         subprocess.run(
-            ["git", "clone", tmp.name, repo],
-            check=True,
+            ["git", "remote", "set-url", "origin", real_origin],
+            cwd=repo_dir, check=True,
         )
         print("Cloned into ./%s" % repo)
     finally:
@@ -246,7 +302,6 @@ def cmd_clone(args):
             pass
 
 
-# ---------- main ----------
 
 def build_parser():
     p = argparse.ArgumentParser(prog="gc", description="GitCode CLI")
@@ -263,6 +318,11 @@ def build_parser():
 
     sp = sub.add_parser("whoami", help="Show current user")
     sp.set_defaults(func=cmd_whoami)
+
+    sp = sub.add_parser("token", help="Manage API tokens")
+    sp.add_argument("action", choices=["new", "list", "delete"])
+    sp.add_argument("value", nargs="?")
+    sp.set_defaults(func=cmd_token)
 
     sp = sub.add_parser("config", help="Show or set config")
     sp.add_argument("action", nargs="?", choices=["get", "set"], default="get")

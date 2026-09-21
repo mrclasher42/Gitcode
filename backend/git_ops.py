@@ -139,3 +139,200 @@ def fork_repo(src_username, src_name, dst_username, dst_name):
         check=True, capture_output=True,
     )
     return dst
+
+
+import tempfile
+
+
+def get_worktree(username, name):
+    """Clone bare repo into a temp worktree, checkout default branch."""
+    bare = repo_path(username, name)
+    if not os.path.isdir(bare):
+        raise FileNotFoundError("repo not found")
+    tmp = tempfile.mkdtemp(prefix="gc-worktree-")
+    subprocess.run(
+        ["git", "clone", bare, tmp],
+        check=True, capture_output=True,
+    )
+    return tmp
+
+
+def commit_file(username, name, path, content, message, author_name, author_email):
+    """Write a file in the worktree, commit, and push back to bare repo."""
+    worktree = get_worktree(username, name)
+    try:
+        # Sanitize path
+        safe = path.lstrip("/").replace("..", "")
+        if not safe:
+            raise ValueError("invalid path")
+
+        full = os.path.join(worktree, safe)
+        os.makedirs(os.path.dirname(full) or worktree, exist_ok=True)
+
+        with open(full, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        # Configure git
+        subprocess.run(
+            ["git", "config", "user.name", author_name],
+            cwd=worktree, check=True, capture_output=True,
+        )
+        subprocess.run(
+            ["git", "config", "user.email", author_email],
+            cwd=worktree, check=True, capture_output=True,
+        )
+
+        subprocess.run(["git", "add", safe], cwd=worktree, check=True, capture_output=True)
+
+        # Check if there is anything to commit
+        diff = subprocess.run(
+            ["git", "diff", "--cached", "--quiet"],
+            cwd=worktree, capture_output=True,
+        )
+        if diff.returncode == 0:
+            # No changes
+            return {"committed": False, "reason": "no_changes"}
+
+        subprocess.run(
+            ["git", "commit", "-m", message],
+            cwd=worktree, check=True, capture_output=True,
+        )
+        subprocess.run(
+            ["git", "push", "origin", "HEAD"],
+            cwd=worktree, check=True, capture_output=True,
+        )
+
+        # Get sha
+        sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=worktree, check=True, capture_output=True, text=True,
+        ).stdout.strip()
+
+        return {"committed": True, "sha": sha}
+    finally:
+        shutil.rmtree(worktree, ignore_errors=True)
+
+
+def delete_file(username, name, path, message, author_name, author_email):
+    """Delete a file, commit, and push."""
+    worktree = get_worktree(username, name)
+    try:
+        safe = path.lstrip("/").replace("..", "")
+        if not safe:
+            raise ValueError("invalid path")
+
+        subprocess.run(
+            ["git", "config", "user.name", author_name],
+            cwd=worktree, check=True, capture_output=True,
+        )
+        subprocess.run(
+            ["git", "config", "user.email", author_email],
+            cwd=worktree, check=True, capture_output=True,
+        )
+
+        subprocess.run(["git", "rm", safe], cwd=worktree, check=True, capture_output=True)
+
+        subprocess.run(
+            ["git", "commit", "-m", message],
+            cwd=worktree, check=True, capture_output=True,
+        )
+        subprocess.run(
+            ["git", "push", "origin", "HEAD"],
+            cwd=worktree, check=True, capture_output=True,
+        )
+
+        sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=worktree, check=True, capture_output=True, text=True,
+        ).stdout.strip()
+
+        return {"deleted": True, "sha": sha}
+    finally:
+        shutil.rmtree(worktree, ignore_errors=True)
+
+
+def diff_between(username, name, sha_a, sha_b):
+    """Return unified diff between two commits."""
+    repo = repo_path(username, name)
+    if not os.path.isdir(repo):
+        return ""
+    try:
+        out = subprocess.run(
+            ["git", "diff", sha_a, sha_b],
+            cwd=repo, check=True, capture_output=True, text=True,
+        )
+        return out.stdout
+    except subprocess.CalledProcessError:
+        return ""
+
+
+def diff_commit(username, name, sha):
+    """Return diff of a single commit vs its parent."""
+    repo = repo_path(username, name)
+    if not os.path.isdir(repo):
+        return ""
+    try:
+        out = subprocess.run(
+            ["git", "show", "--format=", sha],
+            cwd=repo, check=True, capture_output=True, text=True,
+        )
+        return out.stdout
+    except subprocess.CalledProcessError:
+        return ""
+
+
+def branch_info(username, name, branch):
+    """Return last commit info for a branch, or None."""
+    repo = repo_path(username, name)
+    if not os.path.isdir(repo):
+        return None
+    try:
+        out = subprocess.run(
+            ["git", "log", branch, "-n", "1",
+             "--pretty=format:%H%x09%an%x09%at%x09%s"],
+            cwd=repo, check=True, capture_output=True, text=True,
+        )
+        parts = out.stdout.strip().split("\t", 3)
+        if len(parts) == 4:
+            return {
+                "sha": parts[0],
+                "author_name": parts[1],
+                "timestamp": int(parts[2]),
+                "message": parts[3],
+            }
+    except subprocess.CalledProcessError:
+        pass
+    return None
+
+
+def create_branch(username, name, new_branch, from_branch):
+    repo = repo_path(username, name)
+    if not os.path.isdir(repo):
+        raise FileNotFoundError("repo not found")
+    subprocess.run(
+        ["git", "branch", new_branch, from_branch],
+        cwd=repo, check=True, capture_output=True,
+    )
+    return True
+
+
+def delete_branch(username, name, branch):
+    repo = repo_path(username, name)
+    if not os.path.isdir(repo):
+        raise FileNotFoundError("repo not found")
+    subprocess.run(
+        ["git", "branch", "-D", branch],
+        cwd=repo, check=True, capture_output=True,
+    )
+    return True
+
+
+def set_default_branch(username, name, branch):
+    repo = repo_path(username, name)
+    if not os.path.isdir(repo):
+        raise FileNotFoundError("repo not found")
+    subprocess.run(
+        ["git", "symbolic-ref", "HEAD", "refs/heads/" + branch],
+        cwd=repo, check=True, capture_output=True,
+    )
+    return True

@@ -47,7 +47,7 @@ export function CloneMenu({ owner, name }) {
 
   const host = window.location.hostname;
   const urls = {
-    "HTTPS": `http://${host}:8080/${owner}/${name}`,
+    "HTTPS": `https://${host}:8080/${owner}/${name}`,
     "SSH": `git@${host}:${owner}/${name}.git`,
     "GitCode CLI": `gc clone ${owner}/${name}`,
   };
@@ -69,7 +69,7 @@ export function CloneMenu({ owner, name }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[rgba(31,35,40,0.15)] bg-[var(--color-btn-primary-bg)] px-3 text-sm font-medium text-[var(--color-btn-primary-fg)] hover:bg-[var(--color-btn-primary-hover-bg)]"
+        className="inline-flex h-8 items-center gap-1.5 whitespace-nowrap rounded-md border border-[rgba(31,35,40,0.15)] bg-[var(--color-btn-primary-bg)] px-3 text-sm font-medium text-[var(--color-btn-primary-fg)] hover:bg-[var(--color-btn-primary-hover-bg)]"
       >
         <Code2 size={14} />
         <span>Code</span>

@@ -1,9 +1,11 @@
+import { useSettings } from "../contexts/SettingsContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 import { Button } from "../components/Button";
 
 export function NewRepo() {
+  const { t } = useSettings();
   const nav = useNavigate();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
