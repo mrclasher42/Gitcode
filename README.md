@@ -56,6 +56,18 @@ The web interface supports:
 
 ---
 
+## Screenshots
+
+### Home page
+
+![Home page](docs/screenshots/homepage.png)
+
+### Repository view
+
+![Repository view](docs/screenshots/repo.png)
+
+---
+
 ## Features
 
 ### Git hosting
