@@ -52,7 +52,6 @@ export function ApiTokens() {
       setNewToken(d.token);
       load();
     } catch (e) {
-      console.error(e.message);
     } finally {
       setCreating(false);
     }
@@ -74,7 +73,6 @@ export function ApiTokens() {
       if (!r.ok) throw new Error("Failed");
       load();
     } catch (e) {
-      console.error(e.message);
     }
   }
 

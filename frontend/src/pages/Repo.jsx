@@ -210,12 +210,12 @@ export function Repo() {
         </button>
       </div>
 
-      {/* RepoTabs — سطر التبويبات الرئيسي */}
+      {/* RepoTabs */}
       <RepoTabs />
 
       {/* Content */}
       <div className="mt-4">
-        {/* Branch + Clone row (فقط عند Code tab) */}
+        {/* Branch + Clone row */}
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             {branches.length > 0 && (
@@ -231,7 +231,7 @@ export function Repo() {
           <CloneMenu owner={owner} name={name} />
         </div>
 
-        {/* Sub-tabs داخل card */}
+        {/* Sub-tabs */}
         <div className="rounded-md border border-[var(--color-border-default)] bg-[var(--color-canvas-default)]">
           {/* Sub-tabs header */}
           <div className="flex items-center justify-between border-b border-[var(--color-border-muted)]">
@@ -305,7 +305,7 @@ export function Repo() {
           )}
         </div>
 
-        {/* Recent commits (فقط في Files tab) */}
+        {/* Recent commits */}
         {currentTab === "files" && commits.length > 0 && (
           <div className="mt-6">
             <h2 className="mb-2 text-base font-semibold">Recent commits</h2>

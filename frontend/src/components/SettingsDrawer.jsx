@@ -252,7 +252,7 @@ export function SettingsDrawer({ onClose }) {
             {!isPublicProfile && (
               <p className="text-xs text-[var(--color-fg-muted)]">
                 {lang === "ar"
-                  ? "لأن الملف الشخصي خاص، منشوراتك الجديدة ستكون خاصة تلقائياً."
+                  ? T("private_profile_hint")
                   : "Because your profile is private, new posts will be private by default."}
               </p>
             )}
