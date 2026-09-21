@@ -2,9 +2,7 @@
 
 > A lightweight, self-hosted Git platform — built from scratch in Python and React.
 
-GitCode stores real git repositories on disk and serves them through a small
-HTTP API and a modern web interface. No external frameworks, no heavy
-dependencies, no cloud lock-in.
+GitCode stores real git repositories on disk and serves them through a small HTTP API and a modern web interface. No external frameworks, no heavy dependencies, no cloud lock-in.
 
 [![Status](https://img.shields.io/badge/status-beta-blue.svg)](#status)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -17,71 +15,43 @@ dependencies, no cloud lock-in.
 ## Table of Contents
 
 - [What is GitCode](#what-is-gitcode)
-
 - [Features](#features)
-
 - [Requirements](#requirements)
-
 - [Installation](#installation)
-
 - [Configuration](#configuration)
-
 - [HTTPS Setup](#https-setup)
-
 - [CLI Reference](#cli-reference)
-
 - [Project Layout](#project-layout)
-
 - [Architecture](#architecture)
-
 - [API Overview](#api-overview)
-
 - [Roadmap](#roadmap)
-
 - [Development](#development)
-
 - [Contributing](#contributing)
-
 - [License](#license)
-
 - [Acknowledgments](#acknowledgments)
 
 ---
 
 ## What is GitCode
 
-GitCode is a **complete Git hosting platform** that you run yourself. It
-replaces the need for GitHub, GitLab, or Gitea for small projects and personal
-use — with a tiny footprint and zero external dependencies beyond Python and
-Node.js.
+GitCode is a **complete Git hosting platform** that you run yourself. It replaces the need for GitHub, GitLab, or Gitea for small projects and personal use — with a tiny footprint and zero external dependencies beyond Python and Node.js.
 
 The project is designed around a few principles:
 
 - **Real Git, not a mock.** All repositories are real bare git repos on disk.
-
-- **No frameworks.** Backend uses Python stdlib + `markdown`. Frontend uses
-  React and Tailwind, nothing else.
-
+- **No frameworks.** Backend uses Python stdlib + `markdown`. Frontend uses React and Tailwind, nothing else.
 - **Self-contained.** No Docker, no PostgreSQL, no Redis. SQLite + files.
-
 - **Readable.** Every file is meant to be read and understood.
 
 The web interface supports:
 
 - Full repository browsing (tree, files, commits, diffs, branches)
-
 - Issues with comments and state
-
 - Releases with asset uploads
-
 - Posts (short-form and long-form articles)
-
 - A complete settings panel with i18n (English / Arabic) and RTL
-
 - Two-factor authentication
-
 - Personal API tokens
-
 - HTTPS with a self-signed CA
 
 ---
@@ -91,141 +61,91 @@ The web interface supports:
 ### Git hosting
 
 - **Repositories** — create, delete, configure, mark public or private
-
 - **Forks** — fork any public repository into your account
-
 - **Branches** — create, delete, set the default branch
-
 - **Commits** — full history with per-commit diff view
-
 - **Releases** — attach binary assets with download counters
-
 - **Contributors** — aggregated commit authors per repository
-
-- **File browser** — tree navigation with syntax-aware viewer
-
+- **File browser** — tree navigation with a syntax-aware viewer
 - **Line numbers** — optional line numbers in the code viewer
-
 - **Web editor** — edit files in the browser and commit changes
 
 ### Issues
 
 - Open, comment on, and close issues
-
 - Per-repository sequential numbering (`#1`, `#2`, ...)
-
 - Comment engagement: likes and bookmarks
-
 - Comment deletion (author or repository owner)
-
 - Notifications to the repository owner
 
 ### Posts
 
-- **Short posts** and **long-form articles**
-
+- Short-form posts and long-form articles
 - Markdown rendering with GitHub-style tables
-
 - Likes, bookmarks, and comments
-
 - Comment engagement (likes, bookmarks, delete)
-
 - Post visibility: public, followers-only, private
-
 - Per-user feeds: "For you" and "Following"
 
 ### Social
 
 - **Follow** other users (followers / following lists)
-
 - **Star** repositories you like
-
 - **Watch** repositories for updates
-
 - **Activity feed** with recent actions
-
-- **In-app notifications** with unread badge
-
+- **In-app notifications** with an unread badge
 - **Live counters** formatted as `1.2K`, `1.4M`, etc.
 
 ### User accounts
 
 - Signup, login, logout
-
 - Cookie-based sessions (configurable TTL, default 30 days)
-
 - **API tokens** with scopes (`read`, `write`) and expiration
-
 - **Two-factor authentication** (TOTP / Google Authenticator)
-
 - **Backup codes** for 2FA recovery
-
 - **Profile customization** — avatar upload with crop, bio, location, website
-
 - **Change username** at any time
 
 ### Settings panel
 
 - **Theme** — light, dark, or follow system
-
 - **Language** — English and Arabic with full RTL support
-
 - **Notifications** — in-app and email preferences
-
 - **Privacy** — default post visibility, public profile, show email
-
 - **Display** — compact mode, line numbers
-
 - **Security** — two-factor authentication, API tokens
-
 - **Account** — edit profile, change password, sign out
 
 ### Search
 
 - **Global search** across users, repositories, and code
-
 - **Per-repository search** for file contents
-
 - Filter by type (all / users / repos / code)
 
 ### Web interface
 
 - Responsive design — works on mobile and desktop
-
 - Dark and light themes
-
 - Full RTL support for Arabic
-
 - Markdown rendering (README, posts, issues)
-
 - In-app modals and confirmation dialogs
-
 - Custom confirmation dialog (no native browser modals)
-
 - Smooth animations and transitions
 
 ### HTTP server
 
 - **HTTPS** with a self-signed local CA
-
 - Auto-detected certificates
-
 - **Cookie and Bearer token** authentication
-
 - CORS-friendly API for local development
-
 - Sub-500 KB static assets (Tailwind, gzipped)
 
 ### CLI (`gc`)
 
 - `gc login` / `gc logout` / `gc whoami`
-
 - `gc create` / `gc list` / `gc clone` / `gc push`
-
 - `gc fork` / `gc token`
-
 - Works over HTTPS with self-signed certificates
-
 - Installable via `pip install -e .`
 
 ---
@@ -261,7 +181,6 @@ See [HTTPS Setup](#https-setup).
 
     cd backend
     python server.py
-
     # API listens on https://localhost:8080
 
 ### 4. Run the frontend
@@ -269,7 +188,6 @@ See [HTTPS Setup](#https-setup).
     cd frontend
     npm install
     npm run dev
-
     # Web UI on https://localhost:5175
 
 ### 5. Install the CLI
@@ -294,9 +212,7 @@ On first run, no users exist. **Sign up** to create your account.
 
 ## Configuration
 
-GitCode is configured through a single file in the repository root named
-`CONFIG`. It uses a simple `key = value` format with `#` for comments. No
-YAML, no JSON, no external parser — just readable text.
+GitCode is configured through a single file in the repository root named `CONFIG`. It uses a simple `key = value` format with `#` for comments. No YAML, no JSON, no external parser — just readable text.
 
 ### Format
 
@@ -318,11 +234,8 @@ YAML, no JSON, no external parser — just readable text.
 Values are parsed automatically:
 
 - `true` / `false` → boolean
-
 - `123` → integer
-
 - `hello` → string
-
 - Everything else → string as-is
 
 ### Full reference
@@ -409,15 +322,10 @@ Values are parsed automatically:
 ### How it works
 
 - The file is loaded **once at server startup** by `backend/config.py`.
-
 - Changes require a server restart.
-
 - Missing keys fall back to their default values.
-
 - Invalid values are ignored (with a warning in the server log).
-
-- The file is **not** committed as a template. You create it once and it
-  stays local.
+- The file is **not** committed as a template. You create it once and it stays local.
 
 ### Reading CONFIG from Python
 
@@ -440,8 +348,7 @@ Override specific values with environment variables:
 
 ## HTTPS Setup
 
-GitCode uses a self-signed CA for HTTPS. Certificates live in `certs/` and
-are **not** committed (see `.gitignore`).
+GitCode uses a self-signed CA for HTTPS. Certificates live in `certs/` and are **not** committed (see `.gitignore`).
 
 ### Generate the local CA and server certificate
 
@@ -485,11 +392,8 @@ are **not** committed (see `.gitignore`).
 To remove browser warnings, install `certs/ca.crt` as a trusted CA:
 
 - **Android:** Settings → Security → Install certificate → CA certificate
-
 - **iOS:** Settings → General → VPN & Device Management
-
 - **Linux:** `/usr/local/share/ca-certificates/` + `update-ca-certificates`
-
 - **macOS:** Keychain Access → System → drag the `.crt` file
 
 ### For `git clone` over HTTPS
@@ -618,16 +522,12 @@ The CLI is called `gc` and lives in `cli/`.
 ### Why stdlib only
 
 - Runs anywhere Python runs — no compilation, no wheels
-
 - No version conflicts, no dependency hell
-
 - Easy to audit, easy to read
 
 ### Git operations
 
-All git commands are run via `subprocess`. The `git_ops.py` module wraps
-`git init`, `git show`, `git log`, `git ls-tree`, `git clone --bare`,
-`git bundle`, and `git fetch` from a bundle.
+All git commands are run via `subprocess`. The `git_ops.py` module wraps `git init`, `git show`, `git log`, `git ls-tree`, `git clone --bare`, `git bundle`, and `git fetch` from a bundle.
 
 ### Authentication
 
@@ -640,9 +540,7 @@ Both are handled by `current_user()` in `server.py`.
 
 ### Visibility
 
-Posts support three visibility levels: `public`, `followers`, and `private`.
-Repositories support two: public and private. Filters are applied at query
-time in `db.py`.
+Posts support three visibility levels: `public`, `followers`, and `private`. Repositories support two: public and private. Filters are applied at query time in `db.py`.
 
 ---
 
@@ -754,69 +652,39 @@ Full request/response shapes are visible in `backend/server.py`.
 ### Done
 
 - [x] User accounts (signup, login, sessions)
-
 - [x] API tokens with scopes and expiration
-
 - [x] Two-factor authentication (TOTP + backup codes)
-
 - [x] Repositories (create, delete, settings)
-
 - [x] Branches (create, delete, set default)
-
 - [x] Commits and diffs
-
 - [x] Forks and contributors
-
 - [x] Releases with asset uploads
-
 - [x] Issues with comments
-
 - [x] Posts (short-form + articles)
-
 - [x] Post likes, bookmarks, comments
-
 - [x] Comment likes, bookmarks, deletion
-
 - [x] Follows (followers / following)
-
 - [x] Stars and watches
-
 - [x] Activity feed
-
 - [x] In-app notifications with unread badge
-
 - [x] Search (users, repos, code)
-
 - [x] Settings panel with i18n and RTL
-
 - [x] Compact mode
-
 - [x] Line numbers in the code viewer
-
 - [x] HTTPS with a self-signed CA
-
 - [x] CLI (`gc`)
 
 ### Planned
 
 - [ ] Pull requests
-
 - [ ] Webhooks
-
 - [ ] Email notifications
-
 - [ ] Git LFS
-
 - [ ] SSH access
-
 - [ ] Organizations and teams
-
 - [ ] CI / Actions
-
 - [ ] PWA support
-
 - [ ] Pagination for long lists
-
 - [ ] Markdown editor with live preview
 
 ---
@@ -829,11 +697,8 @@ Full request/response shapes are visible in `backend/server.py`.
     python server.py
 
 - Database: `data/gitcode.db` (SQLite)
-
 - Schema is created automatically on first run
-
 - Sessions stored in the `sessions` table
-
 - Config read from the root `CONFIG` file
 
 ### Frontend
@@ -842,9 +707,7 @@ Full request/response shapes are visible in `backend/server.py`.
     npm run dev
 
 - Vite dev server proxies `/api/*` to the backend
-
 - Hot module reload enabled
-
 - Tailwind for styling, no other UI libraries
 
 ### CLI
@@ -855,8 +718,7 @@ Full request/response shapes are visible in `backend/server.py`.
 
 ### Tests
 
-There is no formal test suite yet. Smoke tests are done manually against a
-fresh database.
+There is no formal test suite yet. Smoke tests are done manually against a fresh database.
 
 ---
 
@@ -867,13 +729,9 @@ See `CONTRIBUTING.md` for guidelines.
 Short version:
 
 - No external UI libraries beyond React and Tailwind.
-
 - No external backend frameworks beyond Python stdlib and `markdown`.
-
 - Keep the CLI self-contained (stdlib only).
-
 - Every feature must work on Linux, macOS, and Android (via Termux).
-
 - Comments in English, short and clear. No emoji in code.
 
 ---
@@ -882,8 +740,7 @@ Short version:
 
 MIT. See `LICENSE` for the full text.
 
-Third-party content (Wikipedia pages in the archive) follows its original
-license: CC BY-SA 4.0.
+Third-party content (Wikipedia pages in the archive) follows its original license: CC BY-SA 4.0.
 
 ---
 
@@ -892,11 +749,7 @@ license: CC BY-SA 4.0.
 GitCode is inspired by:
 
 - **GitHub** — for the overall product vision
-
-- **Gitea** and **Forgejo** — for proving that lightweight self-hosted Git
-  platforms can be excellent
-
+- **Gitea** and **Forgejo** — for proving that lightweight self-hosted Git platforms can be excellent
 - **Primer** — for the design language the UI borrows from
 
-Built as a learning project to demonstrate that a complete Git hosting
-platform can run on modest hardware with zero external dependencies.
+Built as a learning project to demonstrate that a complete Git hosting platform can run on modest hardware with zero external dependencies.
