@@ -7,7 +7,7 @@ allow_forks = true
 allow_delete = true
 allow_private = true
 allow_web_editor = true
-allow_signup = false
+allow_signup = true
 
 # Limits
 max_repos_per_user = 50
