@@ -8,7 +8,7 @@ improve clarity and correctness are welcome.
 - No external UI frameworks in the frontend beyond React and Tailwind.
 - No external frameworks in the backend beyond Python stdlib and `markdown`.
 - Keep the CLI self-contained (Python stdlib only).
-- Every feature must work on Termux / Android.
+- Every feature must work on Linux, macOS, and Android (via Termux).
 
 ## Setup
 
@@ -39,7 +39,7 @@ improve clarity and correctness are welcome.
 
 Please include:
 
-- Termux / Android version (or Linux distro)
+- OS and version
 - Python version (`python --version`)
 - Node version (`node --version`)
 - Reproduction steps

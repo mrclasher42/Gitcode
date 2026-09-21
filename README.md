@@ -2,8 +2,7 @@
 
 A lightweight, self-hosted Git platform built from scratch in Python and React.
 
-GitCode runs on Termux / Android without root. It stores real git repositories on
-disk and serves them through a small HTTP API and a modern web interface.
+GitCode stores real git repositories on disk and serves them through a small HTTP API and a modern web interface.
 
 ![Status](https://img.shields.io/badge/status-beta-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -87,7 +86,7 @@ disk and serves them through a small HTTP API and a modern web interface.
 - **Python** 3.8 or newer
 - **Node.js** 18 or newer (for the web UI)
 - **git** CLI in PATH
-- Termux (Android), Linux, or macOS
+- Linux, macOS, or Android (via Termux)
 
 ---
 
@@ -205,18 +204,81 @@ Install `ca.crt` on your devices to remove browser warnings.
 
 ## Configuration
 
-Edit `CONFIG` in the repository root to control runtime behavior:
+GitCode is configured through a single file in the repository root called `CONFIG`.
+It uses a simple `key = value` format with `#` for comments. No YAML, no JSON,
+no external parser — just readable text.
+
+### Format
+
+    # Comments start with a hash
+    key_name = value
+
+    # Booleans
+    allow_forks = true
+    allow_delete = false
+
+    # Integers
+    max_repos_per_user = 50
+    session_ttl_days = 30
+
+    # Strings
+    site_name = GitCode
+    default_branch = main
+
+Values are parsed automatically:
+
+- `true` / `false` → boolean
+- `123` → integer
+- `hello` → string
+- Everything else → string as-is
+
+### Full reference
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| **Repository features** | | | |
+| `allow_forks` | bool | `true` | Enable the "Fork" button |
+| `allow_delete` | bool | `true` | Allow deleting repositories |
+| `allow_private` | bool | `true` | Allow creating private repositories |
+| `allow_web_editor` | bool | `true` | Enable the in-browser file editor |
+| `allow_signup` | bool | `true` | Allow new user registration |
+| **Limits** | | | |
+| `max_repos_per_user` | int | `50` | Maximum repositories per user |
+| `max_file_size_kb` | int | `5120` | Maximum upload size in kilobytes |
+| `max_description_length` | int | `500` | Maximum description length |
+| `max_issues_per_repo` | int | `1000` | Maximum issues per repository |
+| **Defaults** | | | |
+| `default_branch` | str | `main` | Default branch for new repositories |
+| `default_readme` | str | `README.gc` | Default README filename |
+| **Session and security** | | | |
+| `session_ttl_days` | int | `30` | Cookie session lifetime in days |
+| `min_password_length` | int | `6` | Minimum password length |
+| `max_username_length` | int | `39` | Maximum username length |
+| **Interface** | | | |
+| `site_name` | str | `GitCode` | Name shown in the header |
+| `site_description` | str | `Self-hosted Git platform` | Short site description |
+| `items_per_page` | int | `30` | Pagination size |
+| `show_watch_button` | bool | `true` | Show the Watch button on repos |
+| `show_star_button` | bool | `true` | Show the Star button on repos |
+| `show_fork_button` | bool | `true` | Show the Fork button on repos |
+| **Future features** | | | |
+| `enable_issues` | bool | `true` | Enable the Issues module |
+| `enable_pull_requests` | bool | `false` | Enable Pull Requests (planned) |
+| `enable_wiki` | bool | `false` | Enable per-repo wiki (planned) |
+| `enable_lfs` | bool | `false` | Enable Git LFS support (planned) |
+
+### Example `CONFIG`
 
     # Repository features
     allow_forks = true
     allow_delete = true
     allow_private = true
     allow_web_editor = true
-    allow_signup = true
+    allow_signup = false
 
     # Limits
-    max_repos_per_user = 50
-    max_file_size_kb = 5120
+    max_repos_per_user = 100
+    max_file_size_kb = 10240
 
     # Defaults
     default_branch = main
@@ -227,9 +289,35 @@ Edit `CONFIG` in the repository root to control runtime behavior:
 
     # UI
     site_name = GitCode
+    site_description = Self-hosted Git platform
     items_per_page = 30
 
-Values are read on server startup.
+### How it works
+
+- The file is loaded once at server startup by `backend/config.py`.
+- Changes require a server restart.
+- Missing keys fall back to their default values.
+- Invalid values are ignored (with a warning in the server log).
+- The file is **not** committed as a template — you create it once, it stays
+  local. A minimal example lives in the docs.
+
+### Reading CONFIG from Python
+
+    import config
+
+    if config.allow_forks():
+        # show fork button
+
+    days = config.get("session_ttl_days", 30)
+    site = config.get("site_name", "GitCode")
+
+### Environment overrides
+
+You can override specific values with environment variables (useful for
+containers and CI):
+
+    GITCODE_PORT=9090 python server.py
+    GITCODE_CONFIG=/etc/gitcode/CONFIG python server.py
 
 ---
 
@@ -315,5 +403,4 @@ Wikipedia and third-party content in archived pages follow their original licens
 
 ## Acknowledgments
 
-Built as a learning project to demonstrate that a complete Git hosting platform
-can run on a phone. Inspired by GitHub, Gitea, and Forgejo.
+Inspired by GitHub, Gitea, and Forgejo.
