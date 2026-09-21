@@ -104,7 +104,6 @@ def now():
     return int(time.time())
 
 
-# ---------- users ----------
 
 def create_user(username, email, password_hash, salt):
     conn = get_conn()
@@ -140,7 +139,6 @@ def get_user_by_id(user_id):
         conn.close()
 
 
-# ---------- sessions ----------
 
 def create_session(token, user_id, expires_at, user_agent=""):
     conn = get_conn()
@@ -176,7 +174,6 @@ def delete_session(token):
         conn.close()
 
 
-# ---------- repos ----------
 
 def create_repo(owner_id, name, description="", is_private=0, default_branch="main"):
     conn = get_conn()
@@ -255,7 +252,6 @@ def delete_repo(repo_id):
         conn.close()
 
 
-# ---------- forks ----------
 
 def get_repo_by_id(repo_id):
     conn = get_conn()
@@ -325,7 +321,6 @@ def update_repo(repo_id, fields):
         conn.close()
 
 
-# ---------- issues ----------
 
 def next_issue_number(repo_id):
     conn = get_conn()
@@ -440,7 +435,6 @@ def count_issues(repo_id):
         conn.close()
 
 
-# ---------- stars ----------
 
 def is_starred(user_id, repo_id):
     conn = get_conn()
@@ -509,7 +503,6 @@ def list_starred_repos(user_id):
         conn.close()
 
 
-# ---------- watches ----------
 
 def is_watching(user_id, repo_id):
     conn = get_conn()
@@ -578,7 +571,6 @@ def count_forks(repo_id):
         conn.close()
 
 
-# ---------- activities ----------
 
 def log_activity(user_id, repo_id, kind, detail=""):
     conn = get_conn()
@@ -617,7 +609,6 @@ def list_activities(limit=30, user_id=None):
         conn.close()
 
 
-# ---------- follows ----------
 
 def is_following(follower_id, followed_id):
     conn = get_conn()
@@ -714,7 +705,6 @@ def list_following(user_id):
         conn.close()
 
 
-# ---------- notifications ----------
 
 def create_notification(user_id, actor_id, kind, repo_id=None, detail="",
                         target_type="", target_id=None):
@@ -840,7 +830,6 @@ def update_username(user_id, new_username):
         conn.close()
 
 
-# ---------- API Tokens ----------
 
 def create_token(user_id, token, name, scopes="read", expires_at=None):
     conn = get_conn()
@@ -901,7 +890,6 @@ def delete_token(user_id, token_id):
         conn.close()
 
 
-# ---------- Releases ----------
 
 def create_release(repo_id, author_id, tag, name, body, is_draft=False, is_prerelease=False):
     conn = get_conn()
@@ -1013,7 +1001,6 @@ def increment_asset_downloads(asset_id):
         conn.close()
 
 
-# ---------- Posts ----------
 
 def generate_slug(title, post_id=None):
     import re
@@ -1161,7 +1148,6 @@ def update_post_visibility(post_id, visibility):
         conn.close()
 
 
-# ---------- Extra counts (for demo/testing) ----------
 
 def get_extra_counts(post_id):
     conn = get_conn()
@@ -1259,7 +1245,6 @@ def real_comment_count(post_id):
         conn.close()
 
 
-# ---------- Stats formatting ----------
 def format_count(n):
     """Format number as K/M."""
     if n < 1000:
@@ -1483,7 +1468,6 @@ def delete_comment(comment_id):
         conn.close()
 
 
-# ---------- User Settings ----------
 
 DEFAULT_SETTINGS = {
     "theme": "system",
@@ -1549,7 +1533,6 @@ def update_settings(user_id, fields):
         conn.close()
 
 
-# ---------- 2FA ----------
 
 def get_2fa(user_id):
     conn = get_conn()
@@ -1622,7 +1605,6 @@ def consume_backup_code(user_id, code):
         conn.close()
 
 
-# ---------- Notifications cleanup ----------
 
 def clear_notifications(user_id):
     """Delete all notifications for a user."""

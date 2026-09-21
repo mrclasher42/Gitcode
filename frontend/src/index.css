@@ -172,7 +172,6 @@ body {
   overflow: hidden;
 }
 
-/* ---------- RTL support ---------- */
 [dir="rtl"] {
   text-align: right;
 }
@@ -202,7 +201,6 @@ body {
 
 
 
-/* ---------- Compact mode ---------- */
 body.compact .gc-card {
   padding: 8px 12px !important;
 }

@@ -75,7 +75,6 @@ def api_request(cfg, method, path, data=None, raw_body=None, raw_ctype=None):
         sys.exit(1)
 
 
-# ---------- commands ----------
 
 def cmd_login(args):
     server = args.server or input("Server URL [http://localhost:8080]: ").strip() \

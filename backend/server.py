@@ -28,7 +28,6 @@ USERNAME_RE = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9-]{0,38}$")
 REPO_RE = re.compile(r"^[a-zA-Z0-9._-]{1,100}$")
 
 
-# ---------- helpers ----------
 
 def json_response(handler, status, data, extra_headers=None):
     body = json.dumps(data, ensure_ascii=False).encode("utf-8")
@@ -137,14 +136,12 @@ def public_repo(r):
     return d
 
 
-# ---------- handlers ----------
 
 class Handler(BaseHTTPRequestHandler):
 
     def log_message(self, fmt, *args):
         sys.stderr.write("[gc] %s\n" % (fmt % args))
 
-    # ----- CORS -----
     def _cors(self):
         origin = self.headers.get("Origin", "")
         if origin.startswith("http://localhost:") or origin.startswith("http://127.0.0.1:"):
@@ -158,7 +155,6 @@ class Handler(BaseHTTPRequestHandler):
         self._cors()
         self.end_headers()
 
-    # ----- GET -----
     def do_GET(self):
         parsed = urlparse(self.path)
         path = unquote(parsed.path)
@@ -180,7 +176,6 @@ class Handler(BaseHTTPRequestHandler):
         })
 
     def _route_get(self, path, qs):
-        # --- auth ---
         if path == "/api/config":
             return self._get_public_config()
 
@@ -196,7 +191,6 @@ class Handler(BaseHTTPRequestHandler):
                 return json_response(self, 401, {"error": "not_authenticated"})
             return json_response(self, 200, {"user": public_user(u)})
 
-        # --- users ---
         m = re.match(r"^/api/users/([^/]+)/avatar$", path)
         if m:
             return self._get_avatar(m.group(1))
@@ -262,8 +256,6 @@ class Handler(BaseHTTPRequestHandler):
                 "is_following": following,
             })
 
-        # --- repos ---
-        # ---------- Posts ----------
         if path == "/api/posts":
             feed = qs.get("feed", ["all"])[0]
             limit = int(qs.get("limit", ["30"])[0])
@@ -530,7 +522,6 @@ class Handler(BaseHTTPRequestHandler):
             return json_response(self, 400, {"error": "missing_sha"})
         return json_response(self, 200, {"diff": text})
 
-    # ---------- Issues ----------
 
     def _update_issue(self, owner, name, number):
         me = current_user(self)
@@ -551,7 +542,6 @@ class Handler(BaseHTTPRequestHandler):
         db.update_issue_state(issue["id"], state)
         return json_response(self, 200, {"ok": True})
 
-    # ---------- Social ----------
 
     def _list_branches_full(self, owner, name):
         r = db.get_repo(owner, name)
@@ -896,7 +886,6 @@ class Handler(BaseHTTPRequestHandler):
         items = sorted(seen.values(), key=lambda x: -x["commits"])
         return json_response(self, 200, {"contributors": items})
 
-    # ---------- Releases ----------
 
     def _list_releases(self, owner, name):
         r = db.get_repo(owner, name)
@@ -1055,7 +1044,6 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
-    # ---------- Posts methods ----------
 
     def _toggle_comment_like(self, comment_id):
         me = current_user(self)
@@ -1093,7 +1081,6 @@ class Handler(BaseHTTPRequestHandler):
         db.delete_comment(comment_id)
         return json_response(self, 200, {"ok": True})
 
-    # ---------- 2FA ----------
 
     def _2fa_setup(self):
         me = current_user(self)
@@ -1541,7 +1528,6 @@ class Handler(BaseHTTPRequestHandler):
         branch = qs.get("branch", [r["default_branch"]])[0]
         path = qs.get("path", [""])[0].strip("/")
 
-        # ---- Directory check first ----
         if path == "":
             is_dir = True
         else:
@@ -1564,7 +1550,6 @@ class Handler(BaseHTTPRequestHandler):
                 "entries": entries,
             })
 
-        # ---- File ----
         content = git_ops.read_blob(owner, name, branch, path)
         if content is not None:
             return json_response(self, 200, {
@@ -1677,7 +1662,6 @@ class Handler(BaseHTTPRequestHandler):
             except OSError:
                 pass
 
-    # ----- POST -----
     def do_POST(self):
         parsed = urlparse(self.path)
         path = unquote(parsed.path)
@@ -2069,7 +2053,6 @@ class Handler(BaseHTTPRequestHandler):
             except OSError:
                 pass
 
-    # ----- PATCH -----
     def do_PATCH(self):
         parsed = urlparse(self.path)
         path = unquote(parsed.path)
@@ -2098,7 +2081,6 @@ class Handler(BaseHTTPRequestHandler):
         updated["owner_username"] = owner
         return json_response(self, 200, {"repo": public_repo(updated)})
 
-    # ----- DELETE -----
     def do_DELETE(self):
         parsed = urlparse(self.path)
         path = unquote(parsed.path)

@@ -69,7 +69,6 @@ export function Home() {
   );
 }
 
-/* -------- Your repositories -------- */
 function MyRepos() {
   const { t } = useSettings();
   const [repos, setRepos] = useState([]);
@@ -93,7 +92,6 @@ function MyRepos() {
   return <RepoGrid repos={repos} />;
 }
 
-/* -------- Explore -------- */
 function Explore() {
   const { t } = useSettings();
   const [repos, setRepos] = useState([]);
@@ -170,7 +168,6 @@ function Explore() {
   );
 }
 
-/* -------- Starred -------- */
 function Starred() {
   const { t } = useSettings();
   const { user } = useAuth();
@@ -196,7 +193,6 @@ function Starred() {
   return <RepoGrid repos={repos} starred />;
 }
 
-/* -------- Repo grid -------- */
 function RepoGrid({ repos, starred = false }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
@@ -248,7 +244,6 @@ function RepoGrid({ repos, starred = false }) {
   );
 }
 
-/* -------- Recent activity -------- */
 function RecentActivity() {
   const { t } = useSettings();
   const [activities, setActivities] = useState([]);
